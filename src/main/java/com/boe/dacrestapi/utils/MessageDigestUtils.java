@@ -5,6 +5,13 @@ import java.security.NoSuchAlgorithmException;
 
 public class MessageDigestUtils {
 
+	/**
+	 * 算法类型枚举
+	 * @description：功能描述
+	 * @author： chenruixiang
+	 * @created： 2018年5月31日上午10:17:54
+	 * @version：2.x
+	 */
 	enum EncType {
 		MD5("MD5", 1), SHA1("SHA-1", 2), SHA256("SHA-256", 3), SHA384("SHA-384", 4);
 		private String name;

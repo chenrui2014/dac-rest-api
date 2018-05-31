@@ -29,7 +29,7 @@ public class NodePeer implements Serializable {
 	private long id;
 	@Column(nullable=false,unique=false)
 	private String nodeName;
-	@Column(nullable=false,unique=true)
+	@Column(nullable=false,unique=false)
 	private String nodeIp;
 	@Column(nullable=true,unique=false)
 	private String nodePosition;

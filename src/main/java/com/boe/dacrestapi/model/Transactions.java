@@ -27,7 +27,7 @@ public class Transactions implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
-	@Column(nullable=false,unique=true)
+	@Column(nullable=false,unique=false)
 	private String tranHash;//交易哈希
 	@Column(nullable=false,unique=false)
 	private String initiator;//交易发起方
@@ -35,6 +35,8 @@ public class Transactions implements Serializable {
 	private String receiver;//交易接收方
 	@Column(nullable=false,unique=false)
 	private String regBlock;//所属区块
+	@Column(nullable=false,unique=false)
+	private String paintHash;//交易标的
 	@Column(nullable=false,unique=false)
 	private String genTime;//生成时间
 }

@@ -20,12 +20,14 @@ public class ChainBlock implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	@Column(nullable=false,unique=true)
+	@Column(nullable=false,unique=false)
 	private long blockNum;//区块号
-	@Column(nullable=false,unique=true)
+	@Column(nullable=false,unique=false)
 	private String blockHash;//区块哈希
 	@Column(nullable=true,unique=false)
 	private int tranNum;//交易数量
+	@Column(nullable=false,unique=false)
+	private int nodeId;//生成节点
 	@Column(nullable=true,unique=false)
 	private long pacTime;//生成区块耗时
 	@Column(nullable=true,unique=false)
@@ -65,5 +67,11 @@ public class ChainBlock implements Serializable {
 	}
 	public void setGenTime(String genTime) {
 		this.genTime = genTime;
+	}
+	public int getNodeId() {
+		return nodeId;
+	}
+	public void setNodeId(int nodeId) {
+		this.nodeId = nodeId;
 	}
 }
