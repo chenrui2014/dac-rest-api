@@ -6,6 +6,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+/**
+ * 
+ * @description：功能描述
+ * @author： chenruixiang
+ * @created： 2018年5月31日上午8:59:33
+ * @version：1.0
+ */
 @Configuration
 public class BeanConfiguration {
 
