@@ -19,7 +19,7 @@ public interface PaintingRepository extends PagingAndSortingRepository<Painting,
 	 * @return
 	 * @see： 需要参见的其它内容
 	 */
-	Painting findByDenPaintHash(@Param("denPaintHash") String denPaintHash);
+	Painting findByDenPainting_Id(@Param("denPaintId") String denPaintId);
 	/**
 	 * 根据画作哈希获得作品
 	 * @description：功能描述 
@@ -37,7 +37,7 @@ public interface PaintingRepository extends PagingAndSortingRepository<Painting,
 	 * @return
 	 * @see： 需要参见的其它内容
 	 */
-	Page<Painting> findByUserIdOrderByRegTimeDesc(@Param("userId") int userId,Pageable pageable);
+	Page<Painting> findByUser_IdOrderByRegTimeDesc(@Param("userId") int userId,Pageable pageable);
 	/**
 	 * 获得某一用户某一类型的作品
 	 * @description：功能描述 
@@ -47,7 +47,7 @@ public interface PaintingRepository extends PagingAndSortingRepository<Painting,
 	 * @return
 	 * @see： 需要参见的其它内容
 	 */
-	Page<Painting> findByUserIdAndTypeOrderByRegTimeDesc(@Param("userId") int userId,
+	Page<Painting> findByUser_IdAndTypeOrderByRegTimeDesc(@Param("userId") int userId,
 			@Param("type") int type,Pageable pageable);
 	/**
 	 * 获得某一作者的作品
