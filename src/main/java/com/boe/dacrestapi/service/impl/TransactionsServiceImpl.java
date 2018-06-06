@@ -36,5 +36,9 @@ public class TransactionsServiceImpl implements TransactionsService {
 	public Page<Transactions> findAll(Pageable pageable) {
 		return transactionsRepository.findAll(pageable);
 	}
+	@Override
+	public Page<Transactions> findTransactionsByUser(Long userId, Pageable pageable) {
+		return transactionsRepository.findByInitiatorUser_IdOrReceiverUser_IdOrderByGenTimeDesc(userId, userId, pageable);
+	}
 
 }

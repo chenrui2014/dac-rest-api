@@ -11,12 +11,12 @@ import com.boe.dacrestapi.model.Transactions;
 @RepositoryRestResource(collectionResourceRel="transactions",path="tran")
 public interface TransactionsRepository extends PagingAndSortingRepository<Transactions, Long> {
 
-	Page<Transactions> findByInitiatorUser_IdOrderByGenTimeDesc(@Param("initiator") String initiator, 
+	Page<Transactions> findByInitiatorUser_IdOrderByGenTimeDesc(@Param("initiator") long initiator, 
 			Pageable pageable);
-	Page<Transactions> findByReceiverUser_IdOrderByGenTimeDesc(@Param("receiver") String receiver,
+	Page<Transactions> findByReceiverUser_IdOrderByGenTimeDesc(@Param("receiver") long receiver,
 			Pageable pageable);
-	Page<Transactions> findByPainting_IdOrderByGenTimeDesc(@Param("paintingId") String paintingId, 
+	Page<Transactions> findByPainting_IdOrderByGenTimeDesc(@Param("paintingId") long paintingId, 
 			Pageable pageable);
-	Page<Transactions> findByInitiatorUser_IdOrReceiverUser_IdOrderByGenTimeDesc(@Param("initiator") String initiator, 
-			@Param("receiver") String receiver,Pageable pageable);
+	Page<Transactions> findByInitiatorUser_IdOrReceiverUser_IdOrderByGenTimeDesc(@Param("initiator") long initiator, 
+			@Param("receiver") long receiver,Pageable pageable);
 }

@@ -11,4 +11,5 @@ public interface PaintingService {
 
 	List<Painting> findAll();
 	Page<Painting> findAllPaging(Pageable pageable);
+	Page<Painting> findByUserId(long userId,Pageable pageable);
 }

@@ -37,7 +37,7 @@ public interface PaintingRepository extends PagingAndSortingRepository<Painting,
 	 * @return
 	 * @see： 需要参见的其它内容
 	 */
-	Page<Painting> findByUser_IdOrderByRegTimeDesc(@Param("userId") int userId,Pageable pageable);
+	Page<Painting> findByUser_IdOrderByRegTimeDesc(@Param("userId") long userId,Pageable pageable);
 	/**
 	 * 获得某一用户某一类型的作品
 	 * @description：功能描述 

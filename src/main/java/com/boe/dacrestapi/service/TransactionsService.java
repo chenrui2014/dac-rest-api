@@ -11,4 +11,5 @@ public interface TransactionsService {
 
 	List<Transactions> findAll();
 	Page<Transactions> findAll(Pageable pageable);
+	Page<Transactions> findTransactionsByUser(Long userId, Pageable pageable);
 }

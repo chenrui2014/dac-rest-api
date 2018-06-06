@@ -55,6 +55,19 @@ public class TransactionsController {
 		return new ResponseEntity<>(body, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value="/userTransPerPage",method=RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> getUserTransPaging(@RequestParam(value = "userId")Long userId, @RequestParam(value = "page")Integer page, @RequestParam(value = "size")Integer size){
+		Pageable pageable = new PageRequest(page,size);
+		Page<Transactions> tranPage = tranService.findTransactionsByUser(userId, pageable);
+		Map<String, Object> body = new HashMap<>();
+		body.put("data",convertPOJOList(tranPage.getContent()));
+		body.put("number", tranPage.getNumber());
+		body.put("size", tranPage.getSize());
+		body.put("totalElements", tranPage.getTotalElements());
+		body.put("totalPages", tranPage.getTotalPages());
+		return new ResponseEntity<>(body, HttpStatus.OK);
+	}
+	
 	private TransactionsVO convertPOJO(Transactions tran) {
 		TransactionsVO tranVO = new TransactionsVO();
 		tranVO.setId(tran.getId());

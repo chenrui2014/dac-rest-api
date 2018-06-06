@@ -39,7 +39,7 @@ public class PaintingController {
 		return convertPOJOList(paintingList);
 	}
 	@RequestMapping(value="/paintingsPerPage", method=RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> getUserPerPage(@RequestParam(value = "page")Integer page, @RequestParam(value = "size")Integer size){
+	public ResponseEntity<Map<String, Object>> getPaintingPerPage(@RequestParam(value = "page")Integer page, @RequestParam(value = "size")Integer size){
 		Pageable pageable = new PageRequest(page,size);
 		Page<Painting> paintingPage = paintingService.findAllPaging(pageable);
 		Map<String, Object> body = new HashMap<>();
@@ -53,6 +53,19 @@ public class PaintingController {
 //			Transactions tran = tranIt.next();
 //			tranList.add(tran);
 //		}
+		return new ResponseEntity<>(body, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/userPaintingsPerPage", method=RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> getUserPaintingPerPage(@RequestParam(value = "userId")Long userId, @RequestParam(value = "page")Integer page, @RequestParam(value = "size")Integer size){
+		Pageable pageable = new PageRequest(page,size);
+		Page<Painting> paintingPage = paintingService.findByUserId(userId, pageable);
+		Map<String, Object> body = new HashMap<>();
+		body.put("data",convertPOJOList(paintingPage.getContent()));
+		body.put("number", paintingPage.getNumber());
+		body.put("size", paintingPage.getSize());
+		body.put("totalElements", paintingPage.getTotalElements());
+		body.put("totalPages", paintingPage.getTotalPages());
 		return new ResponseEntity<>(body, HttpStatus.OK);
 	}
 	
