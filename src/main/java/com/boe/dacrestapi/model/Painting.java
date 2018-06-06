@@ -1,6 +1,7 @@
 package com.boe.dacrestapi.model;
 
 import java.io.Serializable;
+import java.security.KeyStore.PrivateKeyEntry;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -51,6 +52,10 @@ public class Painting implements Serializable {
 	private String denPaintHash;//依赖版权ID,原创可为空
 	@Column(nullable=false,unique=false)
 	private String type;//画作类型
+	@Column(nullable=false,unique=false)
+	private String paintDes;//画作描述
+	@Column(nullable=false,unique=false)
+	private String paintUrl;//画作存储地址
 	@Column(nullable=false,unique=false)
 	private String regTime;//登记时间
 	@Column(nullable=false,unique=false)

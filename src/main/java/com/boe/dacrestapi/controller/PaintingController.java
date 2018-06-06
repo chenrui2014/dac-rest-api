@@ -12,10 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,7 +43,8 @@ public class PaintingController {
 	}
 	@RequestMapping(value="/paintingsPerPage", method=RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> getPaintingPerPage(@RequestParam(value = "page")Integer page, @RequestParam(value = "size")Integer size){
-		Pageable pageable = new PageRequest(page,size);
+		Sort sort = new Sort(Direction.DESC,"regTime");
+		Pageable pageable = new PageRequest(page,size,sort);
 		Page<Painting> paintingPage = paintingService.findAllPaging(pageable);
 		Map<String, Object> body = new HashMap<>();
 		body.put("data",convertPOJOList(paintingPage.getContent()));
@@ -53,6 +57,14 @@ public class PaintingController {
 //			Transactions tran = tranIt.next();
 //			tranList.add(tran);
 //		}
+		return new ResponseEntity<>(body, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/addPainting", method=RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> addPainting(@RequestBody Painting painting) {
+		Painting painting2 = paintingService.save(painting);
+		Map<String, Object> body = new HashMap<>();
+		body.put("data",convertPOJO(painting2));
 		return new ResponseEntity<>(body, HttpStatus.OK);
 	}
 	
@@ -101,6 +113,8 @@ public class PaintingController {
 		paintingVO.setPaintName(painting.getPaintName());
 		paintingVO.setRegTime(painting.getRegTime());
 		paintingVO.setTransactionId(painting.getTransactionId());
+		paintingVO.setPaintDes(painting.getPaintDes());
+		paintingVO.setPaintUrl(painting.getPaintUrl());
 		paintingVO.setType(painting.getType());
 		paintingVO.setStatus(painting.getStatus());
 		

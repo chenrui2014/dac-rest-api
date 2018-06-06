@@ -39,5 +39,10 @@ public class PaintingServiceImpl implements PaintingService {
 	public Page<Painting> findByUserId(long userId, Pageable pageable) {
 		return paintingRepository.findByUser_IdOrderByRegTimeDesc(userId, pageable);
 	}
+	@Override
+	public Painting save(Painting painting) {
+
+		return paintingRepository.save(painting);
+	}
 
 }

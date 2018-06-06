@@ -17,6 +17,8 @@ public class PaintingVO {
 	private long denPaintId;//依赖作品ID
 	private String denPaintName;//依赖作品名称
 	private String type;//画作类型
+	private String paintDes;
+	private String paintUrl;
 	private String regTime;//登记时间
 	private String status;
 	private String genFlag;
