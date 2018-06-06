@@ -47,11 +47,6 @@ public class TransactionsController {
 		body.put("size", tranPage.getSize());
 		body.put("totalElements", tranPage.getTotalElements());
 		body.put("totalPages", tranPage.getTotalPages());
-//		List<Transactions> tranList = new ArrayList<Transactions>();
-//		while (tranIt.hasNext()) {
-//			Transactions tran = tranIt.next();
-//			tranList.add(tran);
-//		}
 		return new ResponseEntity<>(body, HttpStatus.OK);
 	}
 	
