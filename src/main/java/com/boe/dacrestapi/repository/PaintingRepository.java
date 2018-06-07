@@ -1,7 +1,10 @@
 package com.boe.dacrestapi.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -47,7 +50,7 @@ public interface PaintingRepository extends PagingAndSortingRepository<Painting,
 	 * @return
 	 * @see： 需要参见的其它内容
 	 */
-	Page<Painting> findByUser_IdAndTypeOrderByRegTimeDesc(@Param("userId") int userId,
+	Page<Painting> findByUser_IdAndTypeOrderByRegTimeDesc(@Param("userId") long userId,
 			@Param("type") int type,Pageable pageable);
 	/**
 	 * 获得某一作者的作品
@@ -58,5 +61,7 @@ public interface PaintingRepository extends PagingAndSortingRepository<Painting,
 	 * @see： 需要参见的其它内容
 	 */
 	Page<Painting> findByAuthorOrderByRegTimeDesc(@Param("author") String author,Pageable pageable);
+	
+	List<Painting> findByUser_IdOrderByRegTimeDesc(@Param("userId") long userId);
 	
 }

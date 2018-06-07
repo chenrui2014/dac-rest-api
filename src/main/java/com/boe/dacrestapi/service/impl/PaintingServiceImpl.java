@@ -3,6 +3,7 @@ package com.boe.dacrestapi.service.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,6 +44,14 @@ public class PaintingServiceImpl implements PaintingService {
 	public Painting save(Painting painting) {
 
 		return paintingRepository.save(painting);
+	}
+	@Override
+	public Optional<Painting> findById(long id) {
+		return paintingRepository.findById(id);
+	}
+	@Override
+	public List<Painting> findByUserIdNoPage(long userId) {
+		return paintingRepository.findByUser_IdOrderByRegTimeDesc(userId);
 	}
 
 }
