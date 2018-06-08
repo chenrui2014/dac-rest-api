@@ -1,22 +1,17 @@
 package com.boe.dacrestapi.controller;
 
-import static org.assertj.core.api.Assertions.useRepresentation;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.hibernate.loader.plan.exec.process.spi.ReturnReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.boe.dacrestapi.model.Painting;
-import com.boe.dacrestapi.model.Transactions;
 import com.boe.dacrestapi.model.User;
 import com.boe.dacrestapi.service.PaintingService;
 import com.boe.dacrestapi.service.UserService;
@@ -130,7 +124,7 @@ public class PaintingController {
 	}
 	
 	@RequestMapping(value="/userPaintingsNoPage", method=RequestMethod.GET)
-	public List<PaintingVO> getUserPaintingNoPage(@RequestParam(value = "userId")Long userId, @RequestParam(value = "page")Integer page, @RequestParam(value = "size")Integer size){
+	public List<PaintingVO> getUserPaintingNoPage(@RequestParam(value = "userId")Long userId){
 		
 		List<Painting> paintingList = paintingService.findByUserIdNoPage(userId);
 		return convertPOJOList(paintingList);
