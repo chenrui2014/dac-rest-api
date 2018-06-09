@@ -168,14 +168,16 @@ public class PaintingController {
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
         // 取消对非ASCII字符的转码
         objectMapper.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, false);
-		try {
-			JsonNode jsonNode = objectMapper.readTree(entity.getBody());
-	        JsonNode values = jsonNode.with("values");
-	        String txId = values.get("txId").asText();
-	        painting2.setTransactionId(txId);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        if(entity != null) {
+        	try {
+    			JsonNode jsonNode = objectMapper.readTree(entity.getBody());
+    	        JsonNode values = jsonNode.with("values");
+    	        String txId = values.get("txId") == null ? "" : values.get("txId").asText();
+    	        painting2.setTransactionId(txId);
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }
 
 		painting2 = paintingService.save(painting2);
 		

@@ -1,14 +1,18 @@
 package com.boe.dacrestapi.model;
 
 import java.io.Serializable;
+import java.security.KeyStore.PrivateKeyEntry;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,4 +52,7 @@ public class Transactions implements Serializable {
 	private double tranAmount;//交易金额
 	@Column(nullable=false,unique=false)
 	private String genTime;//生成时间
+	
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="transactions")
+	private List<Income> incomes;
 }

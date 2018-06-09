@@ -3,6 +3,7 @@ package com.boe.dacrestapi.service.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -39,6 +40,10 @@ public class TransactionsServiceImpl implements TransactionsService {
 	@Override
 	public Page<Transactions> findTransactionsByUser(Long userId, Pageable pageable) {
 		return transactionsRepository.findByInitiatorUser_IdOrReceiverUser_IdOrderByGenTimeDesc(userId, userId, pageable);
+	}
+	@Override
+	public Optional<Transactions> findById(long id) {
+		return transactionsRepository.findById(id);
 	}
 
 }

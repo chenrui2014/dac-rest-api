@@ -1,7 +1,6 @@
 package com.boe.dacrestapi.model;
 
 import java.io.Serializable;
-import java.security.KeyStore.PrivateKeyEntry;
 import java.sql.Timestamp;
 import java.util.List;
 

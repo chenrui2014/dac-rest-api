@@ -1,6 +1,7 @@
 package com.boe.dacrestapi.model;
 
 import java.io.Serializable;
+import java.security.KeyStore.PrivateKeyEntry;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -50,5 +51,7 @@ public class User implements Serializable {
 	private List<Transactions> initiatingTran;
 	@OneToMany(fetch=FetchType.LAZY,mappedBy="receiverUser")
 	private List<Transactions> receiveTran;
+	@OneToMany(fetch=FetchType.LAZY,mappedBy="user")
+	private List<Income> incomes;
 	
 }
