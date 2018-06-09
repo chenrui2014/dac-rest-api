@@ -44,6 +44,11 @@ public class FabricServiceImpl implements FabricService {
 	public ResponseEntity<String> addPhoto(HttpEntity<Map<String, Object>> requestEntity) {
 		return this.restTemplate.exchange(this.fabricServicePath + "v1/photo/register", HttpMethod.POST, requestEntity, String.class);
 	}
+
+	@Override
+	public ResponseEntity<String> buyPhoto(HttpEntity<Map<String, Object>> requestEntity) {
+		return this.restTemplate.exchange(this.fabricServicePath + "v1/photo/buy", HttpMethod.POST, requestEntity, String.class);
+	}
 	
 
 }

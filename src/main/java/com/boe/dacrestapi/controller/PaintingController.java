@@ -83,38 +83,6 @@ public class PaintingController {
 		return new ResponseEntity<>(body, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/buyPainting", method=RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> buyPainting(@RequestBody PaintingVO paintingVO) {
-		Painting painting2 = convertVO(paintingVO);
-		String md5Str = MessageDigestUtils.md5(painting2.getAuthor()
-				+painting2.getPaintName()
-				+painting2.getPaintDes()
-				+painting2.getPaintUrl()
-				+painting2.getRegTime()
-				+painting2.getPaintingPrice()
-				+ new Long(painting2.getId()).toString()
-				+ new Long(painting2.getUser() == null ? 0 : painting2.getUser().getId()).toString());
-		painting2.setPaintHash(md5Str);
-		painting2.setDepCerticateId(MessageDigestUtils.sha384(md5Str));
-		painting2.setDigFingerPrint(MessageDigestUtils.sha256(md5Str));
-		painting2.setTransactionId(MessageDigestUtils.sha1(md5Str));
-		
-		painting2 = paintingService.save(painting2);
-		
-		List<Painting> denPaintList = new ArrayList<Painting>();
-		denPaintList.add(painting2);
-		Painting p2 = painting2.getDenPainting();
-		if(p2 != null) {
-			denPaintList.add(p2);
-			if(p2.getDenPainting() != null) {
-				denPaintList.add(p2.getDenPainting());
-			}
-		}
-		Map<String, Object> body = new HashMap<>();
-		body.put("data",convertPOJOList(denPaintList));
-		return new ResponseEntity<>(body, HttpStatus.OK);
-	}
-	
 	@RequestMapping(value="/addPainting", method=RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> addPainting(@RequestBody PaintingVO paintingVO) {
 		Painting painting2 = convertVO(paintingVO);
@@ -129,7 +97,6 @@ public class PaintingController {
 		painting2.setPaintHash(md5Str);
 		painting2.setDepCerticateId(MessageDigestUtils.sha384(md5Str));
 		painting2.setDigFingerPrint(MessageDigestUtils.sha256(md5Str));
-		painting2.setTransactionId(MessageDigestUtils.sha1(md5Str));
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);

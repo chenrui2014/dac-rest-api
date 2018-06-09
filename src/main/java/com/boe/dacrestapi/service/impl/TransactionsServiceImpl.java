@@ -45,5 +45,9 @@ public class TransactionsServiceImpl implements TransactionsService {
 	public Optional<Transactions> findById(long id) {
 		return transactionsRepository.findById(id);
 	}
+	@Override
+	public Transactions save(Transactions transactions) {
+		return transactionsRepository.save(transactions);
+	}
 
 }
