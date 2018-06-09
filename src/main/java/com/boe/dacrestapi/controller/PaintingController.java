@@ -1,5 +1,8 @@
 package com.boe.dacrestapi.controller;
 
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +15,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +28,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.boe.dacrestapi.model.Painting;
 import com.boe.dacrestapi.model.User;
+import com.boe.dacrestapi.service.FabricService;
 import com.boe.dacrestapi.service.PaintingService;
 import com.boe.dacrestapi.service.UserService;
 import com.boe.dacrestapi.utils.MessageDigestUtils;
 import com.boe.dacrestapi.vo.PaintingVO;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 
 @RestController
 public class PaintingController {
@@ -34,10 +50,18 @@ public class PaintingController {
 	private PaintingService paintingService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private FabricService fabricService;
 	
 	@RequestMapping(value="/paintings", method=RequestMethod.GET)
 	public List<PaintingVO> getAllPaintings() {
 		List<Painting> paintingList = paintingService.findAll();
+		return convertPOJOList(paintingList);
+	}
+	@RequestMapping(value="/paintingsOrder", method=RequestMethod.GET)
+	public List<PaintingVO> getAllPaintingsOrderByRegTime(){
+		Sort sort = new Sort(Direction.DESC,"regTime");
+		List<Painting> paintingList = paintingService.findAll(sort);
 		return convertPOJOList(paintingList);
 	}
 	@RequestMapping(value="/paintingsPerPage", method=RequestMethod.GET)
@@ -107,6 +131,52 @@ public class PaintingController {
 		painting2.setDigFingerPrint(MessageDigestUtils.sha256(md5Str));
 		painting2.setTransactionId(MessageDigestUtils.sha1(md5Str));
 		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+		Map<String, Object> params= new HashMap<String, Object>();
+		params.put("hash", painting2.getDigFingerPrint());
+		params.put("name", painting2.getPaintName());
+		params.put("author", painting2.getAuthor());
+		params.put("reg_Time", painting2.getRegTime().getTime());
+		params.put("ca_sn", painting2.getDepCerticateId());
+		params.put("price", painting2.getPaintingPrice());
+		if(painting2.getDenPainting() != null) {
+			params.put("referred", painting2.getDenPainting().getPaintHash());
+		}
+		
+		HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<Map<String, Object>>(params, headers);  
+		
+		ResponseEntity<String> entity = fabricService.addPhoto(requestEntity);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		// 如果为空则不输出
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        // 对于空的对象转json的时候不抛出错误
+        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        // 禁用序列化日期为timestamps
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        // 禁用遇到未知属性抛出异常
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        // 视空字符传为null
+        objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+
+        // 低层级配置
+        objectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+        // 允许属性名称没有引号
+        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        // 允许单引号
+        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        // 取消对非ASCII字符的转码
+        objectMapper.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, false);
+		try {
+			JsonNode jsonNode = objectMapper.readTree(entity.getBody());
+	        JsonNode values = jsonNode.with("values");
+	        String txId = values.get("txId").asText();
+	        painting2.setTransactionId(txId);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		painting2 = paintingService.save(painting2);
 		
 		List<Painting> denPaintList = new ArrayList<Painting>();
@@ -173,13 +243,15 @@ public class PaintingController {
 		paintingVO.setPaintHash(painting.getPaintHash());
 		paintingVO.setPaintingPrice(painting.getPaintingPrice());
 		paintingVO.setPaintName(painting.getPaintName());
-		paintingVO.setRegTime(painting.getRegTime());
 		paintingVO.setTransactionId(painting.getTransactionId());
 		paintingVO.setPaintDes(painting.getPaintDes());
 		paintingVO.setPaintUrl(painting.getPaintUrl());
 		paintingVO.setType(painting.getType());
 		paintingVO.setStatus(painting.getStatus());
 		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String formattedDate = formatter.format(painting.getRegTime());
+		paintingVO.setRegTime(formattedDate);
 		return paintingVO;
 	}
 	
@@ -209,11 +281,19 @@ public class PaintingController {
 		painting.setPaintHash(paintingVO.getPaintHash());
 		painting.setPaintingPrice(paintingVO.getPaintingPrice());
 		painting.setPaintName(paintingVO.getPaintName());
-		painting.setRegTime(paintingVO.getRegTime());
+		
 		painting.setTransactionId(paintingVO.getTransactionId());
 		painting.setPaintDes(paintingVO.getPaintDes());
 		painting.setPaintUrl(paintingVO.getPaintUrl());
 		painting.setType(paintingVO.getType());
+		
+		Timestamp ts = new Timestamp(System.currentTimeMillis()); 
+		try {   
+            ts = Timestamp.valueOf(paintingVO.getRegTime());     
+        } catch (Exception e) {   
+            e.printStackTrace();   
+        }  
+		painting.setRegTime(ts);
 		
 		if(painting.getStatus() != null && !painting.getStatus().isEmpty()) {
 			painting.setStatus(paintingVO.getStatus());

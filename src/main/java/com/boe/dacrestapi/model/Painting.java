@@ -2,6 +2,7 @@ package com.boe.dacrestapi.model;
 
 import java.io.Serializable;
 import java.security.KeyStore.PrivateKeyEntry;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -13,6 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.boe.dacrestapi.utils.CustomDateSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -57,9 +61,10 @@ public class Painting implements Serializable {
 	@Column(nullable=false,unique=false)
 	private String paintUrl;//画作存储地址
 	@Column(nullable=false,unique=false)
-	private String regTime;//登记时间
+	private Timestamp regTime;//登记时间
 	@Column(nullable=false,unique=false)
 	private String status;//登记状态：审核中，已审核，已公正
+	@JsonSerialize(using = CustomDateSerializer.class)  
 	@Column(nullable=true,unique=false)
 	private String genFlag;//标记：1:原创，2:二次创作，3:三次创作
 	

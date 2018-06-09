@@ -47,4 +47,9 @@ public class UserServiceImpl implements UserService {
 		userRepository.deleteById(userId);
 	}
 
+	@Override
+	public User verifyUser(String userName, String password) {
+		return userRepository.findByUserNameAndPassword(userName, password);
+	}
+
 }

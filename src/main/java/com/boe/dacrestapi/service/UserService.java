@@ -11,4 +11,5 @@ public interface UserService {
 	public Optional<User> findOne(long userId);
 	public User findByUserName(String userName);
 	public void delete(long userId);
+	public User verifyUser(String userName,String password);
 }

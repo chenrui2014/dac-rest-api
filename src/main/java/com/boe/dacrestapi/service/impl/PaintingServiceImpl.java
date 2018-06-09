@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +53,17 @@ public class PaintingServiceImpl implements PaintingService {
 	@Override
 	public List<Painting> findByUserIdNoPage(long userId) {
 		return paintingRepository.findByUser_IdOrderByRegTimeDesc(userId);
+	}
+	@Override
+	public List<Painting> findAll(Sort sort) {
+		Iterable<Painting> paintingIt = paintingRepository.findAll(sort);
+		Iterator<Painting> paintIt = paintingIt.iterator();
+		List<Painting> paintings = new ArrayList<Painting>();
+		while(paintIt.hasNext()) {
+			Painting painting = paintIt.next();
+			paintings.add(painting);
+		}
+		return paintings;
 	}
 
 }

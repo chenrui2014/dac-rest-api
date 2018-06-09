@@ -14,4 +14,5 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 	User findByUserName(@Param("userName") String userName);
 	User findByHashString(@Param("hash") String hashString);
 	List<User> findByUserNameOrEmail(@Param("userName") String userName,@Param("email") String email);
+	User findByUserNameAndPassword(@Param("userName") String userName,@Param("password") String password);
 }
