@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import com.boe.dacrestapi.utils.CustomDateSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -34,7 +35,9 @@ public class Income implements Serializable {
 	@ManyToOne(optional=true)
 	@JoinColumn(name="userId")
 	private User user;
-	
+	@ManyToOne
+	@JoinColumn(name="paintingId")
+	private Painting incomePainting;
 	@ManyToOne
 	@JoinColumn(name="transactionId")
 	private Transactions transactions;

@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.boe.dacrestapi.utils.CustomDateSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -79,4 +80,7 @@ public class Painting implements Serializable {
 	private User user;
 	@OneToMany(fetch=FetchType.LAZY,mappedBy="painting")
 	private List<Transactions> transactions;
+	
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="incomePainting")
+	private List<Income> income;
 }

@@ -103,12 +103,12 @@ public class PaintingController {
 		Map<String, Object> params= new HashMap<String, Object>();
 		params.put("hash", painting2.getDigFingerPrint());
 		params.put("name", painting2.getPaintName());
-		params.put("author", painting2.getAuthor());
+		params.put("author", painting2.getUser() == null ? "" : new Long(painting2.getUser().getId()).toString());
 		params.put("reg_Time", painting2.getRegTime().getTime());
 		params.put("ca_sn", painting2.getDepCerticateId());
 		params.put("price", painting2.getPaintingPrice());
 		if(painting2.getDenPainting() != null) {
-			params.put("referred", painting2.getDenPainting().getPaintHash());
+			params.put("referred", painting2.getDenPainting().getDigFingerPrint());
 		}
 		
 		HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<Map<String, Object>>(params, headers);  

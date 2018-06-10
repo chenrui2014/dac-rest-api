@@ -26,6 +26,7 @@ import com.boe.dacrestapi.model.Painting;
 import com.boe.dacrestapi.model.Transactions;
 import com.boe.dacrestapi.model.User;
 import com.boe.dacrestapi.service.IncomeService;
+import com.boe.dacrestapi.service.PaintingService;
 import com.boe.dacrestapi.service.TransactionsService;
 import com.boe.dacrestapi.service.UserService;
 import com.boe.dacrestapi.vo.IncomeDetailVO;
@@ -39,6 +40,8 @@ public class IncomeController {
 	private UserService userService;
 	@Autowired
 	private TransactionsService tranService;
+	@Autowired
+	private PaintingService paintService;
 
 	@RequestMapping(value = "/incomes", method = RequestMethod.GET)
 	public List<IncomeDetailVO> getAllPaintings() {
@@ -79,19 +82,19 @@ public class IncomeController {
 			incomeDetailVO.setTransactionHash(tran.getTranId());
 			incomeDetailVO.setTransactionId(tran.getId());
 			incomeDetailVO.setTranAmount(tran.getTranAmount());
-			Painting painting = tran.getPainting();
-			if(painting != null) {
-				incomeDetailVO.setPaintingHash(painting.getTransactionId());
-				incomeDetailVO.setPaintingId(painting.getId());
-				incomeDetailVO.setPaintingName(painting.getPaintName());
-				incomeDetailVO.setPaintingGenFlag(painting.getGenFlag());
-			}
 		}
 		User user = income.getUser();
 		if(user != null) {
 			incomeDetailVO.setUserId(user.getId());
 			incomeDetailVO.setUserName(user.getUserName());
 			incomeDetailVO.setUserHash(user.getHashString());
+		}
+		Painting painting = income.getIncomePainting();
+		if(painting != null) {
+			incomeDetailVO.setPaintingHash(painting.getTransactionId());
+			incomeDetailVO.setPaintingId(painting.getId());
+			incomeDetailVO.setPaintingName(painting.getPaintName());
+			incomeDetailVO.setPaintingGenFlag(painting.getGenFlag());
 		}
 		incomeDetailVO.setIncome(income.getIncome());
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -120,6 +123,8 @@ public class IncomeController {
 		income.setIncome(incomeDetailVO.getIncome());
 		Optional<User> user = userService.findOne(incomeDetailVO.getUserId());
 		income.setUser(user.orElse(null));
+		Optional<Painting> painting = paintService.findById(incomeDetailVO.getPaintingId());
+		income.setIncomePainting(painting.orElse(null));
 		return income;
 	}
 

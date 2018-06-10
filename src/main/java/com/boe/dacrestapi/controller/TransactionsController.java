@@ -113,7 +113,7 @@ public class TransactionsController {
 		params.put("id", transactions.getTranHash());
 		Painting painting = transactions.getPainting();
 		if (painting != null) {
-			params.put("photoHash", painting.getPaintHash());
+			params.put("photoHash", painting.getDigFingerPrint());
 		}
 
 		User buyer = transactions.getInitiatorUser();
@@ -161,12 +161,21 @@ public class TransactionsController {
 				try {
 					JsonNode jsonNode = objectMapper.readTree(entity.getBody());
 					JsonNode values = jsonNode.with("values");
-					String kind = values.get("kind") == null ? "" : values.get("kind").asText();
-					String msgs = values.get("msgs") == null ? "" : values.get("msgs").asText();
+					String kind = jsonNode.get("kind") == null ? "" : jsonNode.get("kind").asText();
+					String msgs = jsonNode.get("msgs") == null ? "" : jsonNode.get("msgs").asText();
 					if(KIND_FAIL.equals(kind)) {
 						body.put("message", "交易信息写入超级账本失败,错误信息：" + msgs);
 						body.put("success", "false");
 					}else {
+						JsonNode playload = objectMapper.readTree(values.get("Payload").asText());
+						JsonNode result = playload.with("result");
+						String userId = "";
+						if (seller != null) {
+							userId = new Long(seller.getId()).toString();
+						}
+						double user1Blance = result.get(userId) == null ? 0 : result.get(userId).asDouble();
+						//double user2Blance = result.get("user_b") == null ? 0 : result.get("user_b").asDouble();
+						//double user3Blance = result.get("user_a") == null ? 0 : result.get("user_a").asDouble();
 						String txId = values.get("txId") == null ? "" : values.get("txId").asText();
 						transactions.setTranId(txId);
 						transactions = tranService.save(transactions);
@@ -180,7 +189,8 @@ public class TransactionsController {
 								income.setTransactions(transactions);
 								income.setTranTime(transactions.getGenTime());
 								income.setRate(1.0);
-								income.setIncome(transactions.getTranAmount());
+								income.setIncome(new Double(df.format(user1Blance)) );
+								income.setIncomePainting(painting);
 								incomes.add(income);
 								incomeService.saveAll(incomes);
 								transactions.setIncomes(incomes);
@@ -192,8 +202,9 @@ public class TransactionsController {
 								income.setAmount(transactions.getTranAmount());
 								income.setTransactions(transactions);
 								income.setTranTime(transactions.getGenTime());
-								income.setRate(R2_1);
-								income.setIncome(new Double(df.format(transactions.getTranAmount() * R2_1)));
+								income.setRate(0.4);
+								income.setIncome(new Double(df.format(user1Blance)));
+								income.setIncomePainting(painting);
 
 								incomes.add(income);
 								Painting denPainting = painting.getDenPainting();
@@ -203,8 +214,18 @@ public class TransactionsController {
 									income2.setAmount(transactions.getTranAmount());
 									income2.setTransactions(transactions);
 									income2.setTranTime(transactions.getGenTime());
-									income2.setRate(R2_2);
-									income2.setIncome(new Double(df.format(transactions.getTranAmount() * R2_2)));
+									income2.setRate(0.4);
+									income2.setIncomePainting(denPainting);
+									double user2Blance = 0;
+									if(denPainting.getUser() != null) {
+										User denUser = denPainting.getUser();
+										String userId2 = "";
+										if(denUser != null) {
+											userId2 = new Long(denUser.getId()).toString();
+										}
+										user2Blance = result.get(userId2) == null ? 0 : result.get(userId2).asDouble();
+									}
+									income2.setIncome(new Double(df.format(user2Blance)));
 									incomes.add(income2);
 								}
 								incomeService.saveAll(incomes);
@@ -217,8 +238,9 @@ public class TransactionsController {
 								income.setAmount(transactions.getTranAmount());
 								income.setTransactions(transactions);
 								income.setTranTime(transactions.getGenTime());
-								income.setRate(R3_1);
-								income.setIncome(new Double(df.format(transactions.getTranAmount() * R3_1)));
+								income.setRate(0.4);
+								income.setIncomePainting(painting);
+								income.setIncome(new Double(df.format(user1Blance)));
 
 								incomes.add(income);
 								Painting denPainting = painting.getDenPainting();
@@ -228,8 +250,18 @@ public class TransactionsController {
 									income2.setAmount(transactions.getTranAmount());
 									income2.setTransactions(transactions);
 									income2.setTranTime(transactions.getGenTime());
-									income2.setRate(R3_2);
-									income2.setIncome(new Double(df.format(transactions.getTranAmount() * R3_2)));
+									income2.setRate(0.4);
+									income2.setIncomePainting(denPainting);
+									double user2Blance = 0;
+									if(denPainting.getUser() != null) {
+										User denUser = denPainting.getUser();
+										String userId2 = "";
+										if(denUser != null) {
+											userId2 = new Long(denUser.getId()).toString();
+										}
+										user2Blance = result.get(userId2) == null ? 0 : result.get(userId2).asDouble();
+									}
+									income2.setIncome(new Double(df.format(user2Blance)));
 									incomes.add(income2);
 									Painting denDenPainting = denPainting.getDenPainting();
 									if (denDenPainting != null) {
@@ -238,8 +270,18 @@ public class TransactionsController {
 										income3.setAmount(transactions.getTranAmount());
 										income3.setTransactions(transactions);
 										income3.setTranTime(transactions.getGenTime());
-										income3.setRate(R3_3);
-										income3.setIncome(new Double(df.format(transactions.getTranAmount() * R3_3)));
+										income3.setRate(0.4);
+										income3.setIncomePainting(denDenPainting);
+										double user3Blance = 0;
+										if(denDenPainting.getUser() != null) {
+											User denDenUser = denDenPainting.getUser();
+											String userId3 = "";
+											if(denDenUser != null) {
+												userId3 = new Long(denDenUser.getId()).toString();
+											}
+											user3Blance = result.get(userId3) == null ? 0 : result.get(userId3).asDouble();
+										}
+										income3.setIncome(new Double(df.format(user3Blance)));
 										incomes.add(income3);
 									}
 									incomeService.saveAll(incomes);
