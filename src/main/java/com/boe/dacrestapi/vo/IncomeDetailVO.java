@@ -12,6 +12,7 @@ public class IncomeDetailVO {
 	private long transactionId;
 	private String transactionHash;
 	private long paintingId;
+	private String paintingGenFlag;
 	private String paintingName;
 	private String paintingHash;
 	private double tranAmount;

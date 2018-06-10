@@ -2,6 +2,7 @@ package com.boe.dacrestapi.model;
 
 import java.io.Serializable;
 import java.security.KeyStore.PrivateKeyEntry;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -13,6 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.boe.dacrestapi.utils.CustomDateSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -50,8 +54,9 @@ public class Transactions implements Serializable {
 	private Painting painting;//交易标的
 	@Column(nullable=true,unique=false)
 	private double tranAmount;//交易金额
+	@JsonSerialize(using = CustomDateSerializer.class)
 	@Column(nullable=false,unique=false)
-	private String genTime;//生成时间
+	private Timestamp genTime;//生成时间
 	
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="transactions")
 	private List<Income> incomes;

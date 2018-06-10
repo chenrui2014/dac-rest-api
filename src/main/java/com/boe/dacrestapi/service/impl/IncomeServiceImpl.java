@@ -59,4 +59,9 @@ public class IncomeServiceImpl implements IncomeService {
 		return incomeRepository.findByUser_IdOrderByTranTimeDesc(userId);
 	}
 
+	@Override
+	public Iterable<Income> saveAll(Iterable<Income> incomes) {
+		return incomeRepository.saveAll(incomes);
+	}
+
 }

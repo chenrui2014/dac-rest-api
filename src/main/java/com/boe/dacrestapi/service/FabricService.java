@@ -17,4 +17,5 @@ public interface FabricService {
 	
 	ResponseEntity<String> addPhoto(HttpEntity<Map<String, Object>> requestEntity);
 	ResponseEntity<String> buyPhoto(HttpEntity<Map<String, Object>> requestEntity);
+	ResponseEntity<String> getBCI();
 }

@@ -42,6 +42,8 @@ public class Income implements Serializable {
 	private double rate;
 	@Column(nullable=true,unique=false)
 	private double amount;
+	@Column(nullable=true,unique=false)
+	private double income;
 	@JsonSerialize(using = CustomDateSerializer.class) 
 	@Column(nullable=true,unique=false)
 	private Timestamp tranTime;

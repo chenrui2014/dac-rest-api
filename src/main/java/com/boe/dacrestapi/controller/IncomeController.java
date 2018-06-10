@@ -60,6 +60,13 @@ public class IncomeController {
 		body.put("totalPages", paintingPage.getTotalPages());
 		return new ResponseEntity<>(body, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value="/userIncomesNoPage", method = RequestMethod.GET)
+	public List<IncomeDetailVO> getUserPaintingNoPage(@RequestParam(value = "userId")Long userId){
+
+		List<Income> incomeList = incomeService.findByUserIdNoPage(userId);
+		return convertPOJOList(incomeList);
+	}
 
 	private IncomeDetailVO convertPOJO(Income income) {
 
@@ -77,6 +84,7 @@ public class IncomeController {
 				incomeDetailVO.setPaintingHash(painting.getTransactionId());
 				incomeDetailVO.setPaintingId(painting.getId());
 				incomeDetailVO.setPaintingName(painting.getPaintName());
+				incomeDetailVO.setPaintingGenFlag(painting.getGenFlag());
 			}
 		}
 		User user = income.getUser();
@@ -85,7 +93,7 @@ public class IncomeController {
 			incomeDetailVO.setUserName(user.getUserName());
 			incomeDetailVO.setUserHash(user.getHashString());
 		}
-
+		incomeDetailVO.setIncome(income.getIncome());
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String formattedDate = formatter.format(income.getTranTime());
 		incomeDetailVO.setTranTime(formattedDate);
@@ -109,6 +117,7 @@ public class IncomeController {
             e.printStackTrace();   
         }  
 		income.setTranTime(ts);
+		income.setIncome(incomeDetailVO.getIncome());
 		Optional<User> user = userService.findOne(incomeDetailVO.getUserId());
 		income.setUser(user.orElse(null));
 		return income;

@@ -59,11 +59,11 @@ public class Painting implements Serializable {
 	private String paintDes;//画作描述
 	@Column(nullable=false,unique=false)
 	private String paintUrl;//画作存储地址
+	@JsonSerialize(using = CustomDateSerializer.class)  
 	@Column(nullable=false,unique=false)
 	private Timestamp regTime;//登记时间
 	@Column(nullable=false,unique=false)
 	private String status;//登记状态：审核中，已审核，已公正
-	@JsonSerialize(using = CustomDateSerializer.class)  
 	@Column(nullable=true,unique=false)
 	private String genFlag;//标记：1:原创，2:二次创作，3:三次创作
 	

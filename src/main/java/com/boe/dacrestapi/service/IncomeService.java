@@ -15,4 +15,5 @@ public interface IncomeService {
 	Page<Income> findAllPaging(Pageable pageable);
 	Page<Income> findByUserId(long userId,Pageable pageable);
 	List<Income> findByUserIdNoPage(long userId);
+	Iterable<Income> saveAll(Iterable<Income> incomes);
 }
