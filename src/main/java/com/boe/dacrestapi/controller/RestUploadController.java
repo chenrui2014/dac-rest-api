@@ -37,9 +37,9 @@ public class RestUploadController {
 		}
 		File targetFile = null;
 		try {
-			File rootPath = new File(ResourceUtils.getURL("classpath:").getPath());
-			if(!rootPath.exists()) rootPath = new File("");
-			File upload = new File(rootPath.getAbsolutePath(),"static/images/upload/");
+			//File rootPath = new File(ResourceUtils.getURL("classpath:").getPath());
+			//if(!rootPath.exists()) rootPath = new File("");
+			File upload = new File(UPLOADED_FOLDER);
 			if (!upload.exists())
 				upload.mkdirs();
 			String filename = uploadfile.getOriginalFilename();
@@ -82,9 +82,9 @@ public class RestUploadController {
 	}
 	
 	private void saveUploadedFiles(List<MultipartFile> files) throws IOException {
-		File rootPath = new File(ResourceUtils.getURL("classpath:").getPath());
-		if(!rootPath.exists()) rootPath = new File("");
-		File upload = new File(rootPath.getAbsolutePath(),"static/images/upload/");
+		//File rootPath = new File(ResourceUtils.getURL("classpath:").getPath());
+		//if(!rootPath.exists()) rootPath = new File("");
+		File upload = new File(UPLOADED_FOLDER);
 		if (!upload.exists())
 			upload.mkdirs();
         for (MultipartFile file : files) {
